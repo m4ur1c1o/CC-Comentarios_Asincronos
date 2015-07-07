@@ -8,34 +8,35 @@ $(function(){
 
 	$('#comment_area').on("submit",'#new_comment', function( event ){
 		event.preventDefault();
+		var data = $( this ).serialize();
+		console.log("Data:" + data);
 		$("#error").html("");
+
 		comment = $("#new_comment textarea").val();
 		author = $("#authorName").val();
-		// validatePost(author);
-
 
 		if (validateAuthor(author) && validateComment(comment)) {
-			addComment(comment, author);
-			$("#new_comment").hide();
-			$('#new_comment_button').show();
+			$.post('/save', data, function(){
+				addComment(comment, author);
+				$("#new_comment").hide();
+				$('#new_comment_button').show();
+			});
 		} else {
 			$("#error").html("<p>Todos los campos deben estar llenos.</p>");
 
 		}
 
-
 	});
-
 
 });
 
 
 function addForm() {
-	$("#comment_list").append('<form id="new_comment" action="" method="POST">');
-	$("#comment_list form").append('<textarea placeholder="Comment"></textarea>');
-	$("#comment_list form").append('<input id="authorName" placeholder="Author">');
-	$("#comment_list form").append('<div id="error"></div>');
+	$("#comment_list").append("<form id='new_comment' action='/save' method='post'>");
+	$("#comment_list form").append('<textarea name="comment" placeholder="Comment"></textarea>');
+	$("#comment_list form").append('<input id="authorName" name="author" placeholder="Author">');
 	$("#comment_list form").append('<input type="submit">');
+	$("#comment_list form").append('<div id="error"></div>');
 }
 
 function addComment(comment, author) {

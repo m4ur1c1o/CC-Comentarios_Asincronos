@@ -1,5 +1,11 @@
 get '/' do
-  # La siguiente linea hace render de la vista 
-  # que esta en app/views/index.erb
+  
   erb :index
+end
+
+post '/save' do
+	author = params[:author]
+	comment = params[:comment]
+	@post = Comment.create(author: author, comment: comment)
+
 end
